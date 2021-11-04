@@ -24,9 +24,8 @@ pipeline {
 
             def has_inso = sh script:"which inso", returnStatus:true
             if (has_inso != 0) {
-              install_inso()
-              sh "ls -la .programs/"
-              sh "ls -la .programs/*"
+              echo ">> INSO CLI NOT INSTALLED! INSTALL IT WITH: npm install --global insomnia-inso"
+              error("INSO CLI NOT INSTALLED! INSTALL IT WITH: npm install --global insomnia-inso")
             }
           }
         }
