@@ -25,6 +25,8 @@ pipeline {
             def has_inso = sh script:"which inso", returnStatus:true
             if (has_inso != 0) {
               install_inso()
+              sh "ls -la .programs/"
+              sh "ls -la .programs/*"
             }
           }
         }
