@@ -1,5 +1,13 @@
-def install_inso() {
-  sh "mkdir -p ./.programs/ && npm install --prefix ./.programs/ insomnia-inso"
+def get_tool(tool_name) {
+  switch(tool_name) { 
+  case "inso": 
+    sh """curl -L -o inso.tar.xz https://github.com/Kong/insomnia/releases/download/lib%402.4.0/inso-linux-2.4.0.tar.xz
+          tar -xzvf inso.tar.xz
+          mv ./inso ./.tools/inso
+    """
+  break
+  default:
+    error("Tool " + tool_name + " has no installation candidate")
 }
 
 pipeline {
@@ -22,10 +30,13 @@ pipeline {
             sh "echo this is a PR"
             env.DO_BUILD = true
 
-            def has_inso = sh script:"which inso", returnStatus:true
+            // Do not accidentally commit the .tools workspace cache
+            sh "echo '.tools/' >> .gitignore"
+
+            // Check for or dload inso
+            def has_inso = sh script:"ls ./.tools/inso", returnStatus:true
             if (has_inso != 0) {
-              echo ">> INSO CLI NOT INSTALLED! INSTALL IT WITH: npm install --global insomnia-inso"
-              error("INSO CLI NOT INSTALLED! INSTALL IT WITH: npm install --global insomnia-inso")
+              get_tools("inso")
             }
           }
         }
