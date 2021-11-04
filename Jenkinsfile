@@ -1,14 +1,14 @@
 def get_tools(tool_name) {
   switch(tool_name) { 
     case "inso": 
-    sh """mkdir -p
+    sh """mkdir -p ./.tools/
           curl -L -o inso.tar.xz https://github.com/Kong/insomnia/releases/download/lib%402.4.0/inso-linux-2.4.0.tar.xz
           tar -xzvf inso.tar.xz
           mv ./inso ./.tools/inso
           chmod +x ./.tools/inso
     """
     break
-    
+
     default:
     error("Tool " + tool_name + " has no installation candidate")
   }
