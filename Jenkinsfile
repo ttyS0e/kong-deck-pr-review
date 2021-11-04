@@ -18,6 +18,7 @@ pipeline {
       steps {
         script {
           if (env.BRANCH_NAME.startsWith('PR')) {
+            sh "echo $PATH"
             sh "echo this is a PR"
             env.DO_BUILD = true
 
