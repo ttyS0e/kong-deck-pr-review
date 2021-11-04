@@ -25,6 +25,7 @@ pipeline {
             if (has_inso != 0) {
               install_inso()
             }
+          }
         }
       }
     }
