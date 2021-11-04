@@ -8,6 +8,7 @@ def get_tool(tool_name) {
   break
   default:
     error("Tool " + tool_name + " has no installation candidate")
+  }
 }
 
 pipeline {
