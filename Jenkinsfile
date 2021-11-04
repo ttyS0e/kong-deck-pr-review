@@ -1,4 +1,4 @@
-def get_tool(tool_name) {
+def get_tools(tool_name) {
   switch(tool_name) { 
   case "inso": 
     sh """curl -L -o inso.tar.xz https://github.com/Kong/insomnia/releases/download/lib%402.4.0/inso-linux-2.4.0.tar.xz
