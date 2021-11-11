@@ -31,12 +31,12 @@ pipeline {
   agent "any"
 
   stages {
-    when {
-      anyOf {
-        changeRequest()
-      }
-    }
     stage("Checkout SCM") {
+      when {
+        anyOf {
+          changeRequest()
+        }
+      }
       environment {
         DO_BUILD = false
         INSO_PATH = ""
@@ -47,29 +47,11 @@ pipeline {
       }
     }
     stage("Check Environment") {
-      steps {
-      script {
-          sh "echo $PATH"
-          sh "echo this is a PR"
-          env.DO_BUILD = true
-
-          // Do not accidentally commit the .tools workspace cache
-          sh "echo '.tools/' >> .gitignore"
-
-          // Check for or dload inso
-          def has_inso = sh script:"which inso", returnStatus:true
-          if (has_inso != 0) {
-            INSO_PATH = get_tools("inso")
-          }
-
-          def has_deck = sh script:"which deck", returnStatus:true
-          if (has_inso != 0) {
-            DECK_PATH = get_tools("deck")
-          }
+      when {
+        anyOf {
+          changeRequest()
         }
       }
-    }
-    stage("Check Again") {
       steps {
         script {
           sh "echo $PATH"
