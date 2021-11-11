@@ -14,7 +14,7 @@ def get_tools(tool_name) {
     sh """mkdir -p ./.tools/
           curl -L -o deck https://github.com/Kong/deck/releases/download/v1.8.2/deck_1.8.2_linux_amd64.tar.gz
           #curl -L -o deck https://github.com/Kong/deck/releases/download/v1.8.2/deck_1.8.2_darwin_arm64.tar.gz
-          tar -xvf deck.tar.xz
+          tar -xzvf deck.tar.xz
           mv ./deck ./.tools/deck
           chmod +x ./.tools/deck
     """
