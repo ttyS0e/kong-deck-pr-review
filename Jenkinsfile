@@ -22,6 +22,8 @@ def get_tools(tool_name) {
 
     default:
     error("Tool " + tool_name + " has no installation candidate")
+
+    return "./.tools/$tool_name"
   }
 }
 
@@ -29,9 +31,16 @@ pipeline {
   agent "any"
 
   stages {
+    when {
+      anyOf {
+        changeRequest()
+      }
+    }
     stage("Checkout SCM") {
       environment {
         DO_BUILD = false
+        INSO_PATH = ""
+        DECK_PATH = ""
       }
       steps {
         checkout scm
@@ -39,25 +48,46 @@ pipeline {
     }
     stage("Check Environment") {
       steps {
+      script {
+          sh "echo $PATH"
+          sh "echo this is a PR"
+          env.DO_BUILD = true
+
+          // Do not accidentally commit the .tools workspace cache
+          sh "echo '.tools/' >> .gitignore"
+
+          // Check for or dload inso
+          def has_inso = sh script:"which inso", returnStatus:true
+          if (has_inso != 0) {
+            INSO_PATH = get_tools("inso")
+          }
+
+          def has_deck = sh script:"which deck", returnStatus:true
+          if (has_inso != 0) {
+            DECK_PATH = get_tools("deck")
+          }
+        }
+      }
+    }
+    stage("Check Again") {
+      steps {
         script {
-          if (env.BRANCH_NAME.startsWith('PR')) {
-            sh "echo $PATH"
-            sh "echo this is a PR"
-            env.DO_BUILD = true
+          sh "echo $PATH"
+          sh "echo this is a PR"
+          env.DO_BUILD = true
 
-            // Do not accidentally commit the .tools workspace cache
-            sh "echo '.tools/' >> .gitignore"
+          // Do not accidentally commit the .tools workspace cache
+          sh "echo '.tools/' >> .gitignore"
 
-            // Check for or dload inso
-            def has_inso = sh script:"ls ./.tools/inso", returnStatus:true
-            if (has_inso != 0) {
-              get_tools("inso")
-            }
+          // Check for or dload inso
+          def has_inso = sh script:"which inso", returnStatus:true
+          if (has_inso != 0) {
+            INSO_PATH = get_tools("inso")
+          }
 
-            def has_deck = sh script:"ls ./.tools/deck", returnStatus:true
-            if (has_inso != 0) {
-              get_tools("deck")
-            }
+          def has_deck = sh script:"which deck", returnStatus:true
+          if (has_inso != 0) {
+            DECK_PATH = get_tools("deck")
           }
         }
       }
