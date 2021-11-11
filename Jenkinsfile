@@ -4,7 +4,7 @@ def get_tools(tool_name) {
     sh """mkdir -p ./.tools/
           curl -L -o inso.tar.xz https://github.com/Kong/insomnia/releases/download/lib%402.4.0/inso-linux-2.4.0.tar.xz
           #curl -L -o inso.tar.xz https://github.com/Kong/insomnia/releases/download/lib%402.4.0/inso-macos-2.4.0.zip
-          tar -xzvf inso.tar.xz
+          tar -xvf inso.tar.xz
           mv ./inso ./.tools/inso
           chmod +x ./.tools/inso
     """
@@ -14,7 +14,7 @@ def get_tools(tool_name) {
     sh """mkdir -p ./.tools/
           curl -L -o deck https://github.com/Kong/deck/releases/download/v1.8.2/deck_1.8.2_linux_amd64.tar.gz
           #curl -L -o deck https://github.com/Kong/deck/releases/download/v1.8.2/deck_1.8.2_darwin_arm64.tar.gz
-          tar -xzvf deck.tar.xz
+          tar -xvf deck.tar.xz
           mv ./deck ./.tools/deck
           chmod +x ./.tools/deck
     """
@@ -69,6 +69,18 @@ pipeline {
           if (has_inso != 0) {
             DECK_PATH = get_tools("deck")
           }
+        }
+      }
+    }
+    stage("Check Again") {
+      when {
+        anyOf {
+          changeRequest()
+        }
+      }
+      steps {
+        script {
+          sh "echo $DECK_PATH  $INSO_PATH  $DO_BUILD"
         }
       }
     }
