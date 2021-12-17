@@ -147,14 +147,14 @@ pipeline {
 
                     if (anyFailure) {
                         pullRequest.createStatus(status: 'failure',
-                                context: 'continuous-integration/jenkins/pr-merge/tests',
+                                context: 'continuous-integration/jenkins/pr-merge/lint',
                                 description: 'Lint API Specs',
                                 targetUrl: "${env.JOB_URL}/testResults")
                         LINT_PASSED = false
                         error("One or more API Specs failed linting")
                     } else {
                         pullRequest.createStatus(status: 'success',
-                                context: 'continuous-integration/jenkins/pr-merge/tests',
+                                context: 'continuous-integration/jenkins/pr-merge/lint',
                                 description: 'Lint API Specs',
                                 targetUrl: "${env.JOB_URL}/testResults")
                         LINT_PASSED = true
@@ -201,14 +201,14 @@ pipeline {
                     
                     if (anyFailure) {
                         pullRequest.createStatus(status: 'failure',
-                                context: 'continuous-integration/jenkins/pr-merge/tests',
+                                context: 'continuous-integration/jenkins/pr-merge/generate',
                                 description: 'Generate Declarative Config',
                                 targetUrl: "${env.JOB_URL}/testResults")
                         LINT_PASSED = false
                         error("One or more API Specs failed to generate config")
                     } else {
                         pullRequest.createStatus(status: 'success',
-                                context: 'continuous-integration/jenkins/pr-merge/tests',
+                                context: 'continuous-integration/jenkins/pr-merge/generate',
                                 description: 'Generate Declarative Config',
                                 targetUrl: "${env.JOB_URL}/testResults")
                         LINT_PASSED = true
