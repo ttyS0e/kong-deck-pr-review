@@ -1,0 +1,2 @@
+x-kong-plugin-request-validator:
+  enabled: true
