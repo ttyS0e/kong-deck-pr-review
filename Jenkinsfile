@@ -243,10 +243,11 @@ pipeline {
                         }
                     }
 
+                    def theComment = "**SUMMARY OF CHANGES:**\n\n```\n" + deckDiffOutput + "```"
                     if (existingComment == null) {
-                        existingComment = pullRequest.comment("```\n" + deckDiffOutput + "```")
+                        existingComment = pullRequest.comment(theComment)
                     } else {
-                        existingComment.body = "```\n" + deckDiffOutput + "```"
+                        existingComment.body = theComment
                     }
                 }
             }
