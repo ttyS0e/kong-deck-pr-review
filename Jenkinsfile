@@ -244,9 +244,9 @@ pipeline {
                     }
 
                     if (existingComment == null) {
-                        existingComment = pullRequest.comment("```\n" + deckDiffOutput + "\n```")
+                        existingComment = pullRequest.comment("```\n" + deckDiffOutput + "```")
                     } else {
-                        existingComment.body = "```\n" + deckDiffOutput + "\n```"
+                        existingComment.body = "```\n" + deckDiffOutput + "```"
                     }
                 }
             }
