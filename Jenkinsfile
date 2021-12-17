@@ -61,6 +61,7 @@ pipeline {
                 }
               }
               steps {
+                    deleteDir()
                     checkout scm
                     // git credentialsId: 'github-token', url: 'https://github.com/ttyS0e/kong-deck-pr-review.git', branch: 'test'
                     script {
