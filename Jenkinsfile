@@ -38,7 +38,6 @@ def list_dir(dir_path) {
     return ret_array
 }
 
-def DO_BUILD  = false
 def LINT_PASSED = false
 def INSO_PATH = ""
 def DECK_PATH = ""
@@ -54,30 +53,18 @@ pipeline {
     }
     
     stages {
-        stage("Checkout SCM") {
-              when {
-                anyOf {
-                  changeRequest()
-                }
-              }
-              steps {
-                    deleteDir()
-                    checkout scm
-                    // git credentialsId: 'github-token', url: 'https://github.com/ttyS0e/kong-deck-pr-review.git', branch: 'test'
-                    script {
-                        DO_BUILD = true
-                    }
-              }
-        }
-
         stage("Check Environment") {
             when {
                 anyOf {
-                    expression { DO_BUILD == true }
+                    changeRequest()
+                    branch "main"
                 }
             }
             steps {
                 script {
+                    deleteDir()
+                    checkout scm
+
                     // Do not accidentally commit the .tools workspace cache
                     sh "echo '.tools/' >> .gitignore"
                     sh "echo 'kong.yaml' >> .gitignore"
@@ -99,7 +86,8 @@ pipeline {
         stage("Gather API Specs") {
             when {
                 anyOf {
-                    expression { DO_BUILD == true }
+                    changeRequest()
+                    branch "main"
                 }
             }
             steps {
@@ -113,7 +101,8 @@ pipeline {
         stage("Lint API Specs") {
             when {
                 anyOf {
-                    expression { DO_BUILD == true }
+                    changeRequest()
+                    branch "main"
                 }
             }
 
@@ -166,8 +155,8 @@ pipeline {
         stage("Generate Declarative Kongfig") {
             when {
                 anyOf {
-                    expression { DO_BUILD == true }
-                    expression { LINT_PASSED == true }
+                    changeRequest()
+                    branch "main"
                 }
             }
 
@@ -220,7 +209,7 @@ pipeline {
         stage("Deck Diff") {
             when {
                 allOf {
-                    expression { DO_BUILD == true }
+                    changeRequest()
                     expression { LINT_PASSED == true }
                 }
             }
@@ -252,6 +241,29 @@ pipeline {
                 }
             }
         }
+
+        stage("Deck Sync") {
+            when {
+                allOf {
+                    branch "main"
+                    expression { LINT_PASSED == true }
+                }
+            }
+            steps {
+                script {
+                    // Deck diff with all the API Specs
+                    def allSpecs = ""
+                    API_SPECS.each {
+                        allSpecs = allSpecs + " -s api/${it}.kong.yaml"
+                    }
+                    sh script:"deck --headers Kong-Admin-Token:$DECK_RBAC_TOKEN --workspace $DECK_WORKSPACE sync ${allSpecs}"
+                }
+            }
+        }
+
+        // Download portal markup
+        // Add all the API specs
+        // Upload the portal markup
     }
 
     post {
