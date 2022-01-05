@@ -18,7 +18,7 @@ paths:
         schema:
           type: string
       responses:
-        200:
+        '200':
           description: Successfully returns a customer
           content:
             application/json:
@@ -26,7 +26,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Customer'
-        400:
+        '400':
           $ref: '#/components/responses/400Error'
   /customers:
     post:
