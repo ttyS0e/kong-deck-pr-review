@@ -1,0 +1,70 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Customers API By-Path
+  description: A simple API to get customer data
+
+servers:
+  - url: http://customer-api-v1-5.apps.svc.cluster.local:8080
+
+paths:
+  /{version}/customers/{customer_id}:
+    get:
+      x-kong-plugin-route-transformer-advanced:
+        name: route-transformer-advanced
+        enabled: true
+        config:
+          host: "customer-api-$(uri_captures.version).apps.svc.cluster.local"
+      description: Returns a customer 
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully returns a customer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+        '400':
+          $ref: '#/components/responses/400Error'
+  /customers:
+    post:
+      description: Lets a user post a new artist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        '200':
+          description: Successfully created a new artist
+        '400':
+          $ref: '#/components/responses/400Error'  
+        
+components:
+  schemas:
+    Customer:
+      type: object
+      required:
+        - customers_requested
+      properties:
+        customers_id:
+          type: string
+
+  responses:
+    400Error:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: object 
+            properties:
+              message:
+                type: string
