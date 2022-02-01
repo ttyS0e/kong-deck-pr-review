@@ -15,7 +15,7 @@ paths:
     get:
       description: Returns an echo
       responses:
-        '200':
+        200:
           description: Successfully returns an echo
         '400':
           $ref: '#/components/responses/400Error'
