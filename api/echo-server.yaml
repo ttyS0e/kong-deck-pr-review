@@ -1,0 +1,40 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Echo Server
+  description: A Simple Echo API
+
+servers:
+  - url: http://echo-server.apps.svc.cluster.local:8080
+    description: Production Endpoint
+  - url: http://echo-server-sandbox.apps.svc.cluster.local:8080
+    description: Sandbox
+
+paths:
+  /echo:
+    get:
+      description: Returns an echo
+      responses:
+        200:
+          description: Successfully returns an echo
+        '400':
+          $ref: '#/components/responses/400Error'
+    post:
+      description: Returns a POST body echo
+      responses:
+        '200':
+          description: Successfully returns an echo
+        '400':
+          $ref: '#/components/responses/400Error'  
+        
+components:
+  responses:
+    400Error:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: object 
+            properties:
+              message:
+                type: string
