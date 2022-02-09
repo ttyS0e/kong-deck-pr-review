@@ -1,1 +1,1 @@
-{ "keys": [ { "kty": "oct", "use": "sig", "kid": "Key", "k": "1234", "alg": "HS256" } ] }
+{ "keys": [ { "kty": "oct", "use": "sig", "kid": "Key", "k": "MTIzNA==", "alg": "HS256" } ] }
