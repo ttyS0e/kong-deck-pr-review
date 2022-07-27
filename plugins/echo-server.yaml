@@ -3,7 +3,3 @@ _workspace: "rb"
 _info:
   select_tags:
   - sample-api
-
-plugins:
-- service: "echo-api"
-  name: key-auth
