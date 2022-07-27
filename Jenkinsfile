@@ -268,7 +268,7 @@ pipeline {
                     // Deck diff with all the API Specs
                     def allSpecs = ""
                     API_SPECS.each {
-                        allSpecs = allSpecs + " -s api/${it}.kong.yaml -s plugins/${it}.yaml"
+                        allSpecs = allSpecs + " -s api/${it}.kong.yaml -s plugins/${it}"
                     }
 
                     def deckDiffOutput = sh returnStdout:true, script:"deck --headers Kong-Admin-Token:$DECK_RBAC_TOKEN --workspace $DECK_WORKSPACE --select-tag 'sample-api' diff ${allSpecs}"
@@ -305,7 +305,7 @@ pipeline {
                     // Deck diff with all the API Specs
                     def allSpecs = ""
                     API_SPECS.each {
-                        allSpecs = allSpecs + " -s api/${it}.kong.yaml -s plugins/${it}.yaml"
+                        allSpecs = allSpecs + " -s api/${it}.kong.yaml -s plugins/${it}"
                     }
 
                     sh script:"deck --headers Kong-Admin-Token:$DECK_RBAC_TOKEN --workspace $DECK_WORKSPACE --select-tag 'sample-api' sync ${allSpecs}"
