@@ -241,7 +241,7 @@ pipeline {
                 script {
                     def anyFailure = false
                     API_SPECS.each {
-                        def returnCode = sh returnStatus:true, script:"inso generate config api/${it} > api/${it}.kong.yaml --tags 'sample-api"
+                        def returnCode = sh returnStatus:true, script:"inso generate config api/${it} > api/${it}.kong.yaml --tags 'sample-api'"
                         
                         if (returnCode > 0) {
                             anyFailure = true
