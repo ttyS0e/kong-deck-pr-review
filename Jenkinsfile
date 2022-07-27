@@ -49,7 +49,7 @@ pipeline {
     environment {
         DECK_KONG_ADDR = "http://kong-admin.k3s.jack.local"
         DECK_RBAC_TOKEN = credentials('kong-rbac-token')
-        DECK_WORKSPACE = "datamgmt"
+        DECK_WORKSPACE = "rb"
     }
     
     stages {
@@ -270,6 +270,7 @@ pipeline {
                     API_SPECS.each {
                         allSpecs = allSpecs + " -s api/${it}.kong.yaml"
                     }
+
                     def deckDiffOutput = sh returnStdout:true, script:"deck --headers Kong-Admin-Token:$DECK_RBAC_TOKEN --workspace $DECK_WORKSPACE --select-tag 'sample-api' diff ${allSpecs}"
 
                     // Try to find an existing comment from me
@@ -306,7 +307,9 @@ pipeline {
                     API_SPECS.each {
                         allSpecs = allSpecs + " -s api/${it}.kong.yaml"
                     }
+
                     sh script:"deck --headers Kong-Admin-Token:$DECK_RBAC_TOKEN --workspace $DECK_WORKSPACE --select-tag 'sample-api' sync ${allSpecs}"
+
                 }
             }
         }
@@ -321,9 +324,9 @@ pipeline {
             steps {
                 script {
                     // Download portal markup
-                    sh 'KONG_ADMIN_URL=$DECK_KONG_ADDR KONG_ADMIN_TOKEN=$DECK_RBAC_TOKEN portal init datamgmt'
-                    sh 'KONG_ADMIN_URL=$DECK_KONG_ADDR KONG_ADMIN_TOKEN=$DECK_RBAC_TOKEN portal fetch datamgmt'
-                    sh 'rm -rf workspaces/datamgmt/specs ; mkdir -p workspaces/datamgmt/specs'
+                    sh 'KONG_ADMIN_URL=$DECK_KONG_ADDR KONG_ADMIN_TOKEN=$DECK_RBAC_TOKEN portal init rb'
+                    sh 'KONG_ADMIN_URL=$DECK_KONG_ADDR KONG_ADMIN_TOKEN=$DECK_RBAC_TOKEN portal fetch rb'
+                    sh 'rm -rf workspaces/rb/specs ; mkdir -p workspaces/rb/specs'
 
                     API_SPECS.each {
                         // Set the Kong URL in the servers block
@@ -331,11 +334,11 @@ pipeline {
                         sh "sed -i 's/apps.svc.cluster.local:8080/k3s.jack.local/g' api/${it}"
 
                         // Add all the API specs
-                        sh "cp api/${it} workspaces/datamgmt/specs/${it}"
+                        sh "cp api/${it} workspaces/rb/specs/${it}"
                     }
 
                     // Upload the portal markup
-                    sh 'KONG_ADMIN_URL=$DECK_KONG_ADDR KONG_ADMIN_TOKEN=$DECK_RBAC_TOKEN portal deploy datamgmt'
+                    sh 'KONG_ADMIN_URL=$DECK_KONG_ADDR KONG_ADMIN_TOKEN=$DECK_RBAC_TOKEN portal deploy rb'
                 }
             }
         }
