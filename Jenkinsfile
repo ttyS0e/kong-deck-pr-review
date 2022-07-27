@@ -198,7 +198,7 @@ pipeline {
                             }
                         }
 
-                        def returnCode = sh returnStatus:true, script:"inso generate config api/${it} > api/${it}.kong.yaml"
+                        def returnCode = sh returnStatus:true, script:"inso generate config api/${it} > api/${it}.kong.yaml --tags 'sample-api"
                         
                         if (returnCode > 0) {
                             echo "Spec ${it} failed generating"
@@ -270,7 +270,7 @@ pipeline {
                     API_SPECS.each {
                         allSpecs = allSpecs + " -s api/${it}.kong.yaml"
                     }
-                    def deckDiffOutput = sh returnStdout:true, script:"deck --headers Kong-Admin-Token:$DECK_RBAC_TOKEN --workspace $DECK_WORKSPACE diff ${allSpecs}"
+                    def deckDiffOutput = sh returnStdout:true, script:"deck --headers Kong-Admin-Token:$DECK_RBAC_TOKEN --workspace $DECK_WORKSPACE --select-tag 'sample-api' diff ${allSpecs}"
 
                     // Try to find an existing comment from me
                     def existingComment = null
@@ -306,7 +306,7 @@ pipeline {
                     API_SPECS.each {
                         allSpecs = allSpecs + " -s api/${it}.kong.yaml"
                     }
-                    sh script:"deck --headers Kong-Admin-Token:$DECK_RBAC_TOKEN --workspace $DECK_WORKSPACE sync ${allSpecs}"
+                    sh script:"deck --headers Kong-Admin-Token:$DECK_RBAC_TOKEN --workspace $DECK_WORKSPACE --select-tag 'sample-api' sync ${allSpecs}"
                 }
             }
         }
