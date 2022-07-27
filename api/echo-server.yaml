@@ -3,6 +3,7 @@ info:
   version: 1.0.0
   title: Echo Server
   description: A Simple Echo API
+x-kong-name: "echo-api"
 
 servers:
   - url: http://echo-server.apps.svc.cluster.local:8080
@@ -14,6 +15,7 @@ paths:
   /echo:
     get:
       description: Returns an echo
+      x-kong-name: "make-echo-get"
       responses:
         '200':
           description: Successfully returns an echo
@@ -21,6 +23,7 @@ paths:
           $ref: '#/components/responses/400Error'
     post:
       description: Returns a POST body echo
+      x-kong-name: "make-echo-post"
       responses:
         '200':
           description: Successfully returns an echo
