@@ -270,6 +270,7 @@ pipeline {
                     API_SPECS.each {
                         allSpecs = allSpecs + " -s api/${it}.kong.yaml"
                     }
+
                     def deckDiffOutput = sh returnStdout:true, script:"deck --headers Kong-Admin-Token:$DECK_RBAC_TOKEN --workspace $DECK_WORKSPACE --select-tag 'sample-api' diff ${allSpecs}"
 
                     // Try to find an existing comment from me
@@ -306,6 +307,7 @@ pipeline {
                     API_SPECS.each {
                         allSpecs = allSpecs + " -s api/${it}.kong.yaml"
                     }
+
                     sh script:"deck --headers Kong-Admin-Token:$DECK_RBAC_TOKEN --workspace $DECK_WORKSPACE --select-tag 'sample-api' sync ${allSpecs}"
                 }
             }
