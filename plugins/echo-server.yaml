@@ -3,3 +3,17 @@ _workspace: "rb"
 _info:
   select_tags:
   - sample-api
+
+plugins:
+- service: "echo-api"
+  name: key-auth
+# - route: "make-echo-get"
+#   name: {plugin_name}
+#   config:
+#     option_1: val
+#     option_2: val
+# - route: "make-echo-post"
+#   name: {plugin_name}
+#   config:
+#     option_1: val
+#     option_2: val
